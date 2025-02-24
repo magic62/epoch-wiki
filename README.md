@@ -1,3 +1,3 @@
-# Unofficial Project Epoch Wiki
+# Project Epoch Auction House
 
-This wiki is designed to be a flexible, responsive, and user-friendly platform for organizing and displaying information relevant to the Project Epoch server.
+This is an online auction house browser for the Project Epoch server.
