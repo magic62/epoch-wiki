@@ -1,0 +1,379 @@
+<template>
+    <div
+        class="bg-neutral-900 text-slate-200 z-20 select-none relative hidden 2xl:flex pl-[75px] pr-[70px] max-w-[2400px] ultra:mx-auto w-full">
+        <div class="flex mx-auto w-[100%] items-center gap-5">
+            <h1 class="text-3xl">
+                <a href="/">
+                    <img src="/src/assets/images/global/logo.png" class="w-[70px] p-2">
+                </a>
+            </h1>
+            <ul class="flex items-center">
+                <a v-for="link in links" class="group/item" :href="link.link" :target="link.newTab ? '_blank' : ''">
+                    <div class="flex flex-row group/item">
+                        <li
+                            class="flex gap-5 items-center p-3 py-7 text-lg hover:bg-neutral-800 cursor-pointer font-medium">
+                            {{ link.text }}
+                            <i v-if="link.dropdown" class="pi pi-chevron-down cursor-pointer text-slate-200 pt-1"></i>
+                        </li>
+
+                    </div>
+
+                    <div v-if="link.dropdown" class='group-hover/item:block absolute hidden h-auto'>
+                        <ul v-for="item in link.dropdown"
+                            class="top-0 w-52 bg-neutral-700 group/item1"
+                            @mouseover="item.dropdown ? calculateHeight(item.dropdown.length) : {}">
+                            <li class="hover:bg-neutral-600">
+                                <div class="flex flex-row justify-between cursor-pointer">
+                                    <a :href=item.link
+                                        class="flex flex-row justify-between text-slate-200 w-full text-md font-medium items-center py-4 px-5"
+                                        :target="item.newTab ? '_blank' : ''">{{
+                                            item.text }}
+                                        <div v-if="item.dropdown" id=dropdown
+                                            class="group-hover/item1:block absolute hidden ml-[188px]"
+                                            :style="this.amount">
+                                            <ul v-for="item1 in item.dropdown"
+                                                class="w-52 bg-neutral-600">
+                                                <li class="py-1 hover:bg-neutral-500"><a :href="item1.link"
+                                                        class="block text-slate-200 w-full cursor-pointer text-md py-3 px-5 "
+                                                        :target="item1.newTab ? '_blank' : ''">{{
+                                                            item1.text }}
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <i v-if="item.dropdown"
+                                            class="pi pi-chevron-down hover:bg-neutral-600  cursor-pointer text-slate-200"></i>
+                                    </a>
+
+                                </div>
+
+                            </li>
+
+                        </ul>
+                    </div>
+                </a>
+            </ul>
+        </div>
+        <div class="flex gap-5 py-4 w-32">
+            <a href="https://account.project-epoch.net/"
+                class="bg-green-600 hover:bg-green-700 text-slate-200 font-semibold px-3 py-2 border-b-4 border-green-700 rounded text-xl text-center text-nowrap">Sign
+                Up</a>
+            
+            <!-- <a href="https://account.project-epoch.net/"
+                class="bg-blue-600 hover:bg-blue-700 text-slate-200 font-semibold px-5 py-2 border-b-4 border-blue-700 rounded text-xl text-center text-nowrap">Log
+                In</a> -->
+        </div>
+    </div>
+
+    <div class="w-full z-20 bg-neutral-900 select-none 2xl:hidden p-5 pt-3" :class="status.nav">
+        <div class="flex justify-between items-center">
+            <a href="/">
+                <img src="/src/assets/images/global/logo.png" class="w-[37px] mt-1">
+            </a>
+            <a v-if="homePage" href="/">
+                <img src="/src/assets/images/global/full-logo.png" class="max-h-[37px] mt-1">
+            </a>
+            <i :class="status.dropdown" class="pi cursor-pointer text-2xl mt-1 text-slate-200" @click="toggle"></i>
+        </div>
+        <div class="w-full z-20 absolute top-[68px] transition-all ease-in duration-500 lg:duration-300 max-h-dvh overflow-y-scroll pb-[65px]"
+            :class="status.main">
+            <ul class="flex flex-col bg-neutral-900 text-slate-200 min-h-[calc(100vh-68px)]">
+                <div v-for="link in links" :href="link.link" class="flex flex-col text-xl cursor-pointer">
+                    <div class="flex flex-col justify-between">
+                        <div @click="dropdownToggle(link.text)">
+                            <a :href=link.link>
+                                <div class="flex hover:bg-neutral-800 text-center">
+                                    <div v-if="link.dropdown" class="pl-5"></div>
+                                    <li class="flex-grow hover:bg-neutral p-5">
+                                        {{ link.text }}
+                                        <i v-if="link.dropdown" class="pi pi-chevron-down p-2 text-sm"
+                                            :ref="link.text"></i>
+                                    </li>
+                                </div>
+                            </a>
+                        </div>
+                        <div v-if="link.dropdown" :ref="link.text" class="hidden">
+                            <div v-for="item in link.dropdown" :href="item.link"
+                                class="flex flex-col text-xl cursor-pointer">
+                                <div class="flex flex-col justify-between" @click="dropdownToggle(item.text)">
+                                    <a :href=item.link>
+                                        <div class="flex hover:bg-neutral-500 bg-neutral-700 text-center">
+                                            <div v-if="item.dropdown" class="pl-3"></div>
+                                            <li class="flex-grow hover:bg-neutral-500 p-5 text-base">
+
+                                                {{ item.text }}
+                                                <i v-if="item.dropdown" class="pi pi-chevron-down pl-2 text-sm"
+                                                    :ref="item.text"></i>
+                                            </li>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div v-if="item.dropdown" class="hidden" :ref="item.text">
+                                    <a v-for="(item1) in item.dropdown" :href="item1.link"
+                                        class="flex flex-col text-sm cursor-pointer p-5 hover:bg-neutral-400 bg-neutral-600  text-center">
+                                        {{ item1.text }}
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-5 p-4 w-9/12 mx-auto">
+                    <a href="https://account.project-epoch.net/"
+                        class="bg-green-500 hover:bg-green-400 text-slate-200 font-bold px-10 py-3 border-b-4 border-green-700 rounded text-xl text-center">Sign
+                        Up</a>
+                    <a href="https://account.project-epoch.net/"
+                        class="bg-blue-500 hover:bg-blue-400 text-slate-200 font-bold px-10 py-3 border-b-4 border-blue-700 rounded text-xl text-center mb-5">Log
+                        In</a>
+                </div>
+            </ul>
+
+        </div>
+    </div>
+
+    <div v-if=dropdown class="h-[68px] 2xl:hidden"></div>
+
+</template>
+
+<script>
+export default {
+    data() {
+        return {
+            links: [
+                {
+                    text: "News",
+                    link: "/news"
+                },
+                {
+                    text: "How to Play",
+                    link: "/play"
+                },
+                {
+                    text: "Features",
+                    dropdown: [
+                        {
+                            text: "World",
+                            dropdown: [
+                                {
+                                    text: "Difficulty",
+                                    link: "/features/world/difficulty"
+                                },
+                                {
+                                    text: "Locations",
+                                    link: "/features/world/locations/eastern-kingdoms"
+                                },
+                                {
+                                    text: "Bosses",
+                                    link: "/features/world/bosses"
+                                },
+                                {
+                                    text: "Factions",
+                                    link: "/features/world/factions"
+                                },
+                                {
+                                    text: "Quests",
+                                    link: "/features/world/quests"
+                                },
+                                {
+                                    text: "Rares",
+                                    link: "/features/world/rares"
+                                },
+                            ]
+                        },
+                        {
+                            text: "Player",
+                            dropdown: [
+                                {
+                                    text: "Professions",
+                                    link: "/features/professions"
+                                },
+                                {
+                                    text: "Itemization",
+                                    link: "/features/itemization"
+                                },
+                                {
+                                    text: "Class & Race Combos",
+                                    link: "/features/combos"
+                                },
+                                {
+                                    text: "Optional Challenges",
+                                    link: "/features/challenges"
+                                },
+                                {
+                                    text: "QoL & Extras",
+                                    link: "/features/qol"
+                                },
+                            ]
+                        },
+                        {
+                            text: "Instances",
+                            link: "/features/instances/dungeons"
+                        },
+                        {
+                            text: "PvP",
+                            dropdown: [
+                                {
+                                    text: "Overview",
+                                    link: "/features/pvp/overview"
+                                },
+                                {
+                                    text: "Battlegrounds",
+                                    link: "/features/pvp/battlegrounds"
+                                },
+                                {
+                                    text: "Arenas",
+                                    link: "/features/pvp/arenas"
+                                },
+                            ]
+                        },
+                        {
+                            text: "Audio",
+                            dropdown: [
+                                {
+                                    text: "Voice Acting",
+                                    link: "/features/audio/voices"
+                                },
+                                {
+                                    text: "Original Soundtracks",
+                                    link: "/features/audio/soundtracks"
+                                },
+                            ]
+                        },
+                    ]
+                },
+                {
+                    text: "Classes",
+                    dropdown: [
+                        {
+                            text: "Overview",
+                            link: "/classes/overview"
+                        },
+                        {
+                            text: "Talent Calculator",
+                            link: "/classes/talents"
+                        },
+                        {
+                            text: "Druid",
+                            link: "/classes/druid"
+                        },
+                        {
+                            text: "Hunter",
+                            link: "/classes/hunter"
+                        },
+                        {
+                            text: "Mage",
+                            link: "/classes/mage"
+                        },
+                        {
+                            text: "Paladin",
+                            link: "/classes/paladin"
+                        },
+                        {
+                            text: "Priest",
+                            link: "/classes/priest"
+                        },
+                        {
+                            text: "Rogue",
+                            link: "/classes/rogue"
+                        },
+                        {
+                            text: "Shaman",
+                            link: "/classes/shaman"
+                        },
+                        {
+                            text: "Warlock",
+                            link: "/classes/warlock"
+                        },
+                        {
+                            text: "Warrior",
+                            link: "/classes/warrior"
+                        }
+                    ]
+                },
+                {
+                    text: "Community",
+                    dropdown: [
+                        {
+                            text: "Rules",
+                            link: "/community/rules"
+                        },
+                        {
+                            text: "Discord",
+                            link: "/community/discord",
+                            newTab: true
+                        },
+                        {
+                            text: "YouTube",
+                            link: "https://www.youtube.com/@ProjectEpoch",
+                            newTab: true
+                        }
+                    ]
+                },
+                {
+                    text: "Donate",
+                    link: "https://github.com/sponsors/Project-Epoch",
+                    newTab: true
+                },
+                {
+                    text: "Shop",
+                    link: "/shop"
+                }
+            ],
+            dropdown: false,
+            amount: ""
+        }
+    },
+
+    methods: {
+        toggle() {
+            this.dropdown = !this.dropdown
+            document.body.classList.toggle("overflow-hidden")
+            window.scrollTo(0, -50)
+        },
+
+        dropdownToggle(id) {
+            this.$refs[id].forEach(e => {
+                if (e.classList.contains("pi")) {
+                    if (e.classList.contains("pi-chevron-down")) {
+                        e.classList.remove("pi-chevron-down")
+                        e.classList.add("pi-chevron-up")
+                    } else if (e.classList.contains("pi-chevron-up")) {
+                        e.classList.remove("pi-chevron-up")
+                        e.classList.add("pi-chevron-down")
+                    }
+                } else {
+                    e.classList.toggle("hidden");
+                }
+            })
+        },
+
+        calculateHeight(id) {
+            this.amount = "margin-top: " + (id - 1) * 55.75 + "px"
+        }
+
+    },
+
+    computed: {
+        status() {
+            return {
+                nav: this.dropdown ? "fixed" : "block",
+                main: this.dropdown ? "left-0" : "left-[-1536px]",
+                dropdown: this.dropdown ? "pi-times" : "pi-bars"
+            }
+        },
+
+        homePage() {
+            if (this.$route.path == "/") {
+                return false
+            } else {
+                return true
+            }
+        },
+
+        height() {
+            return this.amount
+        }
+    },
+}
+</script>

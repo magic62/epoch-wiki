@@ -1,22 +1,11 @@
 <script>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 export default {
     name: "Header",
     setup() {
         const links = ref([
-            {
-                text: "Database",
-                dropdown: [
-                    { text: "Items", link: "/database/items" },
-                    { text: "Quests", link: "/database/quests" },
-                    { text: "Creatures", link: "/database/creatures" },
-                ],
-            },
-            {
-                text: "Guides",
-                link: "/guides",
-            },
+            { text: "Database", link: "/database" },
             { text: "About", link: "/about" },
         ]);
 
@@ -34,6 +23,15 @@ export default {
             }
             mobileOpenNestedDropdowns.value[parentIndex][childIndex] = !mobileOpenNestedDropdowns.value[parentIndex][childIndex];
         };
+
+        // Watch for changes in isMobileMenuOpen to toggle body overflow
+        watch(isMobileMenuOpen, (newValue) => {
+            if (newValue) {
+                document.body.classList.add('overflow-hidden');
+            } else {
+                document.body.classList.remove('overflow-hidden');
+            }
+        });
 
         return {
             links,
@@ -55,7 +53,7 @@ export default {
             <div class="flex-shrink-0">
                 <a href="/" class="flex gap-4 items-center">
                     <img src="/src/assets/images/full-logo.png" alt="Logo" class="w-64 h-auto" />
-                    <h1 class="text-yellow-400 text-2xl">Unoffical Wiki</h1>
+                    <h1 class="text-yellow-400 text-2xl">Auction House</h1>
                 </a>
             </div>
             <ul class="flex justify-center items-center xl:flex-row text-lg">
@@ -103,7 +101,7 @@ export default {
             <div class="text-center mx-auto">
                 <a href="/" class="flex flex-col items-center sm:flex-row sm:gap-4">
                     <img src="/src/assets/images/full-logo.png" alt="Logo" class="w-40 h-auto" />
-                    <h1 class="text-yellow-400 text-2xl">Unoffical Wiki</h1>
+                    <h1 class="text-yellow-400 text-2xl">Auction House</h1>
                 </a>
             </div>
         </div>
