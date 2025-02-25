@@ -21,3 +21,15 @@ export async function fetchAuctionByEntry(entry) {
   const result = await response.json();
   return result.data;
 }
+
+export async function fetchData() {
+  const response = await fetch('http://localhost:3000/api/data');
+  const result = await response.json();
+  return result.data;
+}
+
+export async function fetchDataByEntry(entry) {
+  const response = await fetch(`http://localhost:3000/api/data/${entry}`);
+  const result = await response.json();
+  return result.data;
+}
